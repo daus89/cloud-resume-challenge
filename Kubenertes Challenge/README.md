@@ -17,8 +17,10 @@ By leveraging Kubernetes and containerization for your challenge, you embrace a 
 # Step 1
 # Containerize Your E-Commerce Website and Database
 A. Web Application Containerization
-Create a Dockerfile: Navigate to the root of the e-commerce application and create a Dockerfile. This file should instruct Docker to:
+Create a Dockerfile: Navigate to the root of the e-commerce application and create a Dockerfile. 
+Create Dockerfile. Reference: https://docs.docker.com/reference/dockerfile/#here-documents
 
+This file should instruct Docker to:
 Use php:7.4-apache as the base image.
 Install mysqli extension for PHP.
 Copy the application source code to /var/www/html/.
@@ -28,14 +30,14 @@ Build and Push the Docker Image:
 
 Execute docker build -t yourdockerhubusername/ecom-web:v1 . to build your image.
 ```
-docker build -t my-ecommerce-app .
+$docker build -t my-ecommerce-app .
 ```
-
 Push it to Docker Hub with docker push yourdockerhubusername/ecom-web:v1.
+
 ```
-docker login
-docker tag my-ecommerce-app daus89/myecommerce-app:v1
-docker push daus89/myecommerce-app:v1
+$docker login --username username
+$docker tag my-ecommerce-app daus89/myecommerce-app:v1
+$docker push daus89/myecommerce-app:v1
 ```
 
 Outcome: Your web application Docker image is now available on Docker Hub.
