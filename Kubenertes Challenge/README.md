@@ -29,11 +29,14 @@ Build and Push the Docker Image:
 Execute docker build -t yourdockerhubusername/ecom-web:v1 . to build your image.
 ```
 $docker build -t my-ecommerce-app .
+```
 
 Push it to Docker Hub with docker push yourdockerhubusername/ecom-web:v1.
 ```
+$docker login
 $docker tag my-ecommerce-app daus89/myecommerce-app:v1
 $docker push daus89/myecommerce-app:v1
+```
 
 Outcome: Your web application Docker image is now available on Docker Hub.
 B. Database Containerization
