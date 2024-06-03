@@ -1,5 +1,7 @@
-# Kubenertes Challenge
-Intro
+## Kubenertes Challenge
+Reference: https://cloudresumechallenge.dev/docs/extensions/kubernetes-challenge/
+
+# Intro
 Imagine you are going to deploy an e-commerce website. It’s crucial to consider the challenges of modern web application deployment and how containerization and Kubernetes (K8s) offer compelling solutions:
 
 Scalability: How can your application automatically adjust to fluctuating traffic?
@@ -11,3 +13,28 @@ Dynamic Scaling: Adjusts application resources based on demand.
 Self-healing: Restarts failed containers and reschedules them on healthy nodes.
 Seamless Updates & Rollbacks: Enables zero-downtime updates and easy rollbacks.
 By leveraging Kubernetes and containerization for your challenge, you embrace a scalable, consistent, and resilient deployment strategy. This not only demonstrates your technical acumen but aligns with modern DevOps practices.
+
+# Step 1
+# Containerize Your E-Commerce Website and Database
+A. Web Application Containerization
+Create a Dockerfile: Navigate to the root of the e-commerce application and create a Dockerfile. This file should instruct Docker to:
+
+Use php:7.4-apache as the base image.
+Install mysqli extension for PHP.
+Copy the application source code to /var/www/html/.
+Update database connection strings to point to a Kubernetes service named mysql-service.
+Expose port 80 to allow traffic to the web server.
+Build and Push the Docker Image:
+
+Execute docker build -t yourdockerhubusername/ecom-web:v1 . to build your image.
+```
+$docker build -t my-ecommerce-app .
+
+Push it to Docker Hub with docker push yourdockerhubusername/ecom-web:v1.
+```
+$docker tag my-ecommerce-app daus89/myecommerce-app:v1
+$docker push daus89/myecommerce-app:v1
+
+Outcome: Your web application Docker image is now available on Docker Hub.
+B. Database Containerization
+Database Preparation: Instead of containerizing the database yourself, you’ll use the official MariaDB image. Prepare the database initialization script (db-load-script.sql) to be used with Kubernetes ConfigMaps or as an entrypoint script.
