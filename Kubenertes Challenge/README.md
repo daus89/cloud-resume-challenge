@@ -53,3 +53,7 @@ Outcome: A fully operational Kubernetes cluster ready for deployment.
 Im choosing Azure Kubernetes Service (AKS)
 
 1. Install azure CLI: https://learn.microsoft.com/en-us/cli/azure/install-azure-cli
+2. Login into azure account using azure cli
+```
+az login --tenant <microsoft entra tenant ID>
+```
