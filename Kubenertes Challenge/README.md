@@ -73,3 +73,11 @@ az aks create --resource-group myResourceGroup --name myAKSCluster --node-count 
 ```
 ![image](https://github.com/daus89/cloud-resume-challenge/assets/129677949/ab7680e5-aa2f-46d0-91a2-2bb694589c5d)
 
+6. You can stop the AKS cluster which might cost the free credits
+```
+az aks stop --name myAKSCluster --resource-group myResourceGroup
+az aks show --name myAKSCluster --resource-group myResourceGroup #to verify
+```
+
+
+
