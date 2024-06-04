@@ -71,4 +71,5 @@ az acr create --name <Propose any acrName> --resource-group myResourceGroup --sk
 ```
 az aks create --resource-group myResourceGroup --name myAKSCluster --node-count 1 --generate-ssh-keys --attach-acr <acrName>
 ```
+![image](https://github.com/daus89/cloud-resume-challenge/assets/129677949/ab7680e5-aa2f-46d0-91a2-2bb694589c5d)
 
