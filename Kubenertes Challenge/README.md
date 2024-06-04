@@ -1,4 +1,4 @@
-## Kubenertes Challenge
+# Kubenertes Challenge
 Reference: https://cloudresumechallenge.dev/docs/extensions/kubernetes-challenge/
 
 # Intro
@@ -43,3 +43,13 @@ $docker push daus89/myecommerce-app:v1
 Outcome: Your web application Docker image is now available on Docker Hub.
 B. Database Containerization
 Database Preparation: Instead of containerizing the database yourself, you’ll use the official MariaDB image. Prepare the database initialization script (db-load-script.sql) to be used with Kubernetes ConfigMaps or as an entrypoint script.
+
+# Step 2
+# Set Up Kubernetes on a Public Cloud Provider
+
+Cluster Creation: Choose AWS (EKS), Azure (AKS), or GCP (GKE) and follow their documentation to create a Kubernetes cluster. Ensure you have kubectl configured to interact with your cluster.
+Outcome: A fully operational Kubernetes cluster ready for deployment.
+
+Im choosing Azure Kubernetes Service (AKS)
+
+1. Install azure CLI: https://learn.microsoft.com/en-us/cli/azure/install-azure-cli
