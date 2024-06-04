@@ -50,10 +50,25 @@ Database Preparation: Instead of containerizing the database yourself, you’ll 
 Cluster Creation: Choose AWS (EKS), Azure (AKS), or GCP (GKE) and follow their documentation to create a Kubernetes cluster. Ensure you have kubectl configured to interact with your cluster.
 Outcome: A fully operational Kubernetes cluster ready for deployment.
 
-Im choosing Azure Kubernetes Service (AKS)
+Create new azure ID with new email to get free 200USD credit.
+Make sure to run CMD/Powershell as Administrator.
 
 1. Install azure CLI: https://learn.microsoft.com/en-us/cli/azure/install-azure-cli
 2. Login into azure account using azure cli
 ```
 az login --tenant <microsoft entra tenant ID>
 ```
+3. Create New Azure Resource Group
+```
+az group create --name myResourceGroup --location southeastasia
+```
+4. Create new Azure Container Registry (ACR)
+```
+
+az acr create --name <Propose any acrName> --resource-group myResourceGroup --sku basic
+```
+5. Create AKS resources
+```
+az aks create --resource-group myResourceGroup --name myAKSCluster --node-count 1 --generate-ssh-keys --attach-acr <acrName>
+```
+
