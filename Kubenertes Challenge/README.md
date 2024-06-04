@@ -79,5 +79,8 @@ az aks stop --name myAKSCluster --resource-group myResourceGroup
 az aks show --name myAKSCluster --resource-group myResourceGroup #to verify
 ```
 
+![image](https://github.com/daus89/cloud-resume-challenge/assets/129677949/10c0eb41-38c2-4720-ba0b-d045e2748def)
+
+
 
 
