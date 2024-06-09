@@ -1,4 +1,4 @@
-# Kubenertes Challenge
+# Kubernetes Challenge
 Reference: https://cloudresumechallenge.dev/docs/extensions/kubernetes-challenge/
 
 # Intro
@@ -81,6 +81,86 @@ az aks show --name myAKSCluster --resource-group myResourceGroup #to verify
 
 ![image](https://github.com/daus89/cloud-resume-challenge/assets/129677949/10c0eb41-38c2-4720-ba0b-d045e2748def)
 
+# Create and use a volume with Azure Blob Storage in Azure Kubernetes Service (AKS)
 
+# Statically vs Dynamically privision storage fo AKS
+
+
+| Feature                       | Static Provisioning                                           | Dynamic Provisioning                                              |
+|-------------------------------|---------------------------------------------------------------|-------------------------------------------------------------------|
+| **Definition**                | Manually created Persistent Volumes (PVs)                     | Persistent Volumes (PVs) are automatically provisioned            |
+| **Setup**                     | Admin creates PVs manually before they are bound to PVCs      | StorageClass defines the provisioning method, and PVCs trigger PV creation |
+| **Flexibility**               | Less flexible; requires pre-configured storage resources      | More flexible; PVs are created on demand based on PVC specifications |
+| **Use Case**                  | Useful when specific storage configurations are needed        | Ideal for dynamic and scalable environments                       |
+| **Administrative Effort**     | Higher; manual management of storage resources                | Lower; automated management of storage resources                  |
+| **StorageClass**              | Optional; not required for PV creation                        | Required; defines the type of storage to be provisioned           |
+| **Resource Management**       | Manual adjustment of storage allocation                       | Automatic adjustment and scaling of storage resources             |
+| **Example Scenario**          | Dedicated storage for specific applications                   | General-purpose storage for applications needing on-demand volumes |
+
+
+
+Create Azure Blob to use as persistent volume(PV) in the AKS cluster.
+Reference: https://learn.microsoft.com/en-us/azure/aks/azure-csi-blob-storage-provision?tabs=mount-nfs%2Csecret
+
+1. Enable Blob Storage CSI Driver in AKS Cluster
+```
+az aks update --enable-blob-driver --name myAKSCluster --resource-group myResourceGroup
+```
+
+2. Create Storage Class using NFS Protocol
+Create a manifest file blob-nfs-sc.yaml
+```
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: azureblob-nfs-premium
+provisioner: blob.csi.azure.com
+parameters:
+  protocol: nfs
+  tags: environment=Development
+volumeBindingMode: Immediate
+allowVolumeExpansion: true
+mountOptions:
+  - nconnect=4
+```
+Apply the manifest
+```
+kubectl apply -f blob-nfs-sc.yaml
+```
+# Dynamically provision a volume
+1. Create Persistent Volume Claim manifest file
+```
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+    name: azure-managed-disk
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: azureblob-nfs-premium
+  resources:
+    requests:
+      storage: 5Gi
+```
+# Statically provision a volume
+1. In order to use Azure CLI to create storage, register Microsoft storage provider.
+```
+az provider register -n Microsoft.Storage --subscription <subscriptiion ID>
+```
+2. Get the resource group name
+```
+az aks show --resource-group myResourceGroup --name myAKSCluster --query nodeResourceGroup -o tsv
+```
+Output
+```
+MC_myResourceGroup_myAKSCluster_southeastasia
+```
+
+
+
+# Step 3
+# Deploy Your Website to Kubernetes
+Kubernetes Deployment: Create a website-deployment.yaml defining a Deployment that uses the Docker image created in Step 1A. Ensure the Deployment specifies the necessary environment variables and mounts for the database connection.
+Outcome: The e-commerce web application is running on Kubernetes, with pods managed by the Deployment.
 
 
