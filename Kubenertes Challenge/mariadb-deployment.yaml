@@ -22,7 +22,10 @@ spec:
         - name: MYSQ_USER
           value: root
         - name: MYSQL_ROOT_PASSWORD
-          value: abc123
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: mysql-root-password
         - name: MYSQL_DATABASE
           value: ecommerce
         volumeMounts:

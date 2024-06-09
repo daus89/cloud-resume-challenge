@@ -171,7 +171,7 @@ data:
    INSERT INTO products (Name,Price,ImageUrl) VALUES ("Laptop","100","c-1.png"),("Drone","200","c-2.png"),("VR","300","c-3.png"),("Tablet","50","c-5.png"),("Watch","90","c-6.png"),("Phone Covers","20","c-7.png"),("Phone","80","c-8.png"),("Laptop","150","c-4.png");  
 ```
 ```
-kubectl apply -f dbb-configmap.yaml
+kubectl apply -f db-configmap.yaml
 ```
 Check the created configmap
 ```
@@ -180,7 +180,28 @@ kubectl get configmap
 
 ![image](https://github.com/daus89/cloud-resume-challenge/assets/129677949/048892de-4753-4538-84ce-09d02d4dc424)
 
-2. Create Database manifest mariadb-deployment.yaml, service and mount the configmap mariadb-initdb as volume, use previously created pvc azure-managed-disk
+2. Create kubernetes Secret to safely use it in the Database manifest  later.
+Encode the password first
+```
+echo -n 'yourpassword' | base64
+```
+Create secret.yaml 
+```
+apiVersion: v1
+kind: Secret
+metadata:
+  name: db-secret
+type: Opaque
+data:
+  mysql-root-password: cGFzc3dvcmQ=  # base64 encoded password
+```
+Create the secret
+```
+kubectl apply -f secret.yaml
+```
+
+
+3. Create Database manifest mariadb-deployment.yaml, service and mount the configmap mariadb-initdb as volume, use previously created pvc azure-managed-disk
 ```
 apiVersion: apps/v1
 kind: Deployment
@@ -235,7 +256,7 @@ spec:
 kubectl apply -f mariadb-deployment.yaml
 ```
 
-3. Create application deployment manifest ecommerce-deployment.yaml to use the mariadb deployment
+4. Create application deployment manifest ecommerce-deployment.yaml to use the mariadb deployment
 ```
 apiVersion: apps/v1
 kind: Deployment
