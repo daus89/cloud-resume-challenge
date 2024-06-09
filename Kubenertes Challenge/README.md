@@ -128,7 +128,7 @@ Apply the manifest
 kubectl apply -f blob-nfs-sc.yaml
 ```
 # Dynamically provision a volume
-1. Create Persistent Volume Claim manifest file
+1. Create Persistent Volume Claim manifest file pvc.yaml
 ```
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -140,27 +140,43 @@ spec:
   storageClassName: azureblob-nfs-premium
   resources:
     requests:
-      storage: 5Gi
+      storage: 10Gi
 ```
-# Statically provision a volume
-1. In order to use Azure CLI to create storage, register Microsoft storage provider.
+2. Apply the pvc manifest
 ```
-az provider register -n Microsoft.Storage --subscription <subscriptiion ID>
+kubectl apply -f pvc.yaml
 ```
-2. Get the resource group name
+3. Check the newly created pvc
 ```
-az aks show --resource-group myResourceGroup --name myAKSCluster --query nodeResourceGroup -o tsv
+kubectl get pvc
 ```
-Output
-```
-MC_myResourceGroup_myAKSCluster_southeastasia
-```
-
 
 
 # Step 3
 # Deploy Your Website to Kubernetes
 Kubernetes Deployment: Create a website-deployment.yaml defining a Deployment that uses the Docker image created in Step 1A. Ensure the Deployment specifies the necessary environment variables and mounts for the database connection.
 Outcome: The e-commerce web application is running on Kubernetes, with pods managed by the Deployment.
+
+# Create Database manifest and necessarilly configuration
+1. Create and apply configmap to configure the DB db-configmap.yaml
+```
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mariadb-init
+data:
+  init.sql: |
+   USE ecomdb;
+   CREATE TABLE products (id mediumint(8) unsigned NOT NULL auto_increment,Name varchar(255) default NULL,Price varchar(255) default NULL, ImageUrl varchar(255) default NULL,PRIMARY KEY (id)) AUTO_INCREMENT=1;
+   INSERT INTO products (Name,Price,ImageUrl) VALUES ("Laptop","100","c-1.png"),("Drone","200","c-2.png"),("VR","300","c-3.png"),("Tablet","50","c-5.png"),("Watch","90","c-6.png"),("Phone Covers","20","c-7.png"),("Phone","80","c-8.png"),("Laptop","150","c-4.png");  
+```
+```
+kubectl apply -f dbb-configmap.yaml
+```
+Check the created configmap
+```
+kubectl get configmap
+```
+
 
 
