@@ -180,6 +180,133 @@ kubectl get configmap
 
 ![image](https://github.com/daus89/cloud-resume-challenge/assets/129677949/048892de-4753-4538-84ce-09d02d4dc424)
 
+2. Create Database manifest mariadb-deployment.yaml, service and mount the configmap mariadb-initdb as volume, use previously created pvc azure-managed-disk
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb
+spec:
+  selector:
+    matchLabels:
+      app: mariadb
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      containers:
+      - image: mariadb:10.5
+        name: mariadb
+        env:
+        - name: MYSQL_USER
+          value: root
+        - name: MYSQL_ROOT_PASSWORD
+          value: abc123
+        - name: MYSQL_DATABASE
+          value: ecommerce
+        volumeMounts:
+        - name: mariadb-persistent-storage
+          mountPath: /var/lib/mysql
+        - name: mariadb-initdb
+          mountPath: /docker-entrypoint-initdb.d
+      volumes:
+      - name: mariadb-persistent-storage
+        persistentVolumeClaim:
+          claimName: azure-managed-disk
+      - name: mariadb-initdb
+        configMap:
+          name: mariadb-initdb
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+spec:
+  ports:
+  - port: 3306
+  selector:
+    app: mariadb
+```
+```
+kubectl apply -f mariadb-deployment.yaml
+```
+
+3. Create application deployment manifest ecommerce-deployment.yaml to use the mariadb deployment
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  generation: 1
+  labels:
+    app: my-ecommerce
+  name: my-ecommerce
+  namespace: default
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 2
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: my-ecommerce
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: my-ecommerce
+    spec:
+      containers:
+      - image: daus89/myecommerce-app:v1
+        imagePullPolicy: Always
+        name: myecommerce-app
+        ports:
+        - containerPort: 80
+        env:
+        - name: DB_HOST
+          value: mysql-service
+        - name: DB_PORT
+          value: "3306"
+        - name: DB_NAME
+          value: ecommerce
+        - name: DB_USER
+          value: "root"
+        - name: DB_PASSWORD
+          value: abc123
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-app
+spec:
+  selector:
+    app: my-ecommerce
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
+```
+
+
+
+
+## Challenge
+1. Application is not accessible from public IP
+Check service and make sure service endpoint pointing to application
+```
+kubectl get service -o wide
+```
+Check deployment for errors
+```
+kubectl get deployments
+```
 
 
 

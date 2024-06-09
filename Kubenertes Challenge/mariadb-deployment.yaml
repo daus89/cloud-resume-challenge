@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb
+spec:
+  selector:
+    matchLabels:
+      app: mariadb
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      containers:
+      - image: mariadb:10.5
+        name: mariadb
+        ports:
+        -  containerPort: 3306
+        env:
+        - name: MYSQ_USER
+          value: root
+        - name: MYSQL_ROOT_PASSWORD
+          value: abc123
+        - name: MYSQL_DATABASE
+          value: ecommerce
+        volumeMounts:
+        - name: mariadb-persistent-storage
+          mountPath: /var/lib/mysql
+        - name: mariadb-initdb
+          mountPath: /docker-entrypoint-initdb.d
+      volumes:
+      - name: mariadb-persistent-storage
+        persistentVolumeClaim:
+          claimName: azure-managed-disk
+      - name: mariadb-initdb
+        configMap:
+          name: mariadb-initdb
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+spec:
+  ports:
+  - port: 3306
+  selector:
+    app: mariadb
