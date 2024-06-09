@@ -178,5 +178,8 @@ Check the created configmap
 kubectl get configmap
 ```
 
+![image](https://github.com/daus89/cloud-resume-challenge/assets/129677949/048892de-4753-4538-84ce-09d02d4dc424)
+
+
 
 
