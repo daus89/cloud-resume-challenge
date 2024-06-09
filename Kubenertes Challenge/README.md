@@ -315,7 +315,13 @@ spec:
   type: LoadBalancer
 ```
 
+5. Access the application from public
+Get the LoadBalancer IP
+```
+kubectl get service -o wide
+```
 
+Access the IP through browser
 
 
 ## Challenge
