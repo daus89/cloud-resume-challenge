@@ -320,8 +320,12 @@ Get the LoadBalancer IP
 ```
 kubectl get service -o wide
 ```
+![image](https://github.com/daus89/cloud-resume-challenge/assets/129677949/290c176f-89f5-4084-8359-3c7c27f8ee52)
 
 Access the IP through browser
+
+![image](https://github.com/daus89/cloud-resume-challenge/assets/129677949/6a89f7bd-457a-405b-afae-9aafa1716f91)
+
 
 
 ## Challenge
