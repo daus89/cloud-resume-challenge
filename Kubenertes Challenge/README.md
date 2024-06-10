@@ -299,7 +299,11 @@ spec:
         - name: DB_USER
           value: "root"
         - name: DB_PASSWORD
-          value: abc123
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: mysql-root-password
+---
 ---
 apiVersion: v1
 kind: Service
@@ -337,10 +341,48 @@ Simulate Load: Use a tool like Apache Bench to generate traffic and increase CPU
 Monitor Autoscaling: Observe the HPA in action with kubectl get hpa.
 Outcome: The deployment automatically adjusts the number of pods based on CPU load, showcasing Kubernetes’ capability to maintain performance under varying loads.
 
-1. Apply autoscale using HPA targeting 50% CPU utilization, with a minimum of 2 and a maximum of 10 pods.
+1. Ensure  the deployment has appropriate CPU requests and limits. The HPA will only work if these are set correctly.
+Add
+```
+  resources:
+          requests:
+            cpu: "100m"
+          limits:
+            cpu: "500m"
+```
+in deployment spec and reapply the deployment
+
+```
+kubectl apply -f ecommerce-deployment.yaml
+```
+
+2. Apply autoscale using HPA targeting 50% CPU utilization, with a minimum of 2 and a maximum of 10 pods.
 ```
 kubectl autoscale deployment my-ecommerce --cpu-percent=50 --min=2 --max=10
 ```
+3. Use Apache Bench to load test the deployment
+First, install the Apache Bench (BA)
+```
+sudo apt-get update
+sudo apt-get install apache2-utils
+```
+Second, run the BA against our public web.
+```
+ab -n 50000 -c 200 http://<app public IP>/
+```
+-n 50000 specifies the total number of requests to perform.
+-c 200 specifies the number of multiple requests to perform at a time.
+
+Use these kubectl commands to monitor the autoscale functionallity while running the BA test.
+```
+kubectl get hpa --watch
+```
+```
+kubectl get pods --watch
+```
+
+
+
 
 ## Challenges
 1. Application is not accessible from public IP
