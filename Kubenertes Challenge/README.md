@@ -153,7 +153,7 @@ kubectl get pvc
 
 
 # Step 3
-# Deploy Your Website to Kubernetes
+# Deploy Your Website to Kubernetes and Expose to Public Via LoadBalance
 Kubernetes Deployment: Create a website-deployment.yaml defining a Deployment that uses the Docker image created in Step 1A. Ensure the Deployment specifies the necessary environment variables and mounts for the database connection.
 Outcome: The e-commerce web application is running on Kubernetes, with pods managed by the Deployment.
 
@@ -326,9 +326,23 @@ Access the IP through browser
 
 ![image](https://github.com/daus89/cloud-resume-challenge/assets/129677949/6a89f7bd-457a-405b-afae-9aafa1716f91)
 
+# Step 4
+# Autoscale Your Application
 
+Task: Automate scaling based on CPU usage to handle unpredictable traffic spikes.
 
-## Challenge
+Implement HPA: Create a Horizontal Pod Autoscaler targeting 50% CPU utilization, with a minimum of 2 and a maximum of 10 pods.
+Apply HPA: Execute kubectl autoscale deployment ecom-web --cpu-percent=50 --min=2 --max=10.
+Simulate Load: Use a tool like Apache Bench to generate traffic and increase CPU load.
+Monitor Autoscaling: Observe the HPA in action with kubectl get hpa.
+Outcome: The deployment automatically adjusts the number of pods based on CPU load, showcasing Kubernetes’ capability to maintain performance under varying loads.
+
+1. Apply autoscale using HPA targeting 50% CPU utilization, with a minimum of 2 and a maximum of 10 pods.
+```
+kubectl autoscale deployment my-ecommerce --cpu-percent=50 --min=2 --max=10
+```
+
+## Challenges
 1. Application is not accessible from public IP
 Check service and make sure service endpoint pointing to application
 ```
