@@ -361,19 +361,19 @@ kubectl apply -f ecommerce-deployment.yaml
 kubectl autoscale deployment my-ecommerce --cpu-percent=50 --min=2 --max=10
 ```
 3. Use Apache Bench to load test the deployment
-First, install the Apache Bench (BA)
+First, install the Apache Bench (AB)
 ```
 sudo apt-get update
 sudo apt-get install apache2-utils
 ```
-Second, run the BA against our public web.
+Second, run the AB against our public web.
 ```
 ab -n 50000 -c 200 http://<app public IP>/
 ```
 -n 50000 specifies the total number of requests to perform.
 -c 200 specifies the number of multiple requests to perform at a time.
 
-Use these kubectl commands to monitor the autoscale functionallity while running the BA test.
+Use these kubectl commands to monitor the autoscale functionallity while running the AB test.
 ```
 kubectl get hpa --watch
 ```
@@ -381,6 +381,9 @@ kubectl get hpa --watch
 kubectl get pods --watch
 ```
 
+![image](https://github.com/daus89/cloud-resume-challenge/assets/129677949/cfbbfc82-fcbc-477d-ac54-9ad92b71f492)
+
+As you can see in window 1, the Apache Bench is running and the same same time in window 2, the pod is creating while in window 3 the deployment is increasing in replicas count.
 
 
 
