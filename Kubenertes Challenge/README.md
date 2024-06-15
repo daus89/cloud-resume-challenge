@@ -420,6 +420,8 @@ When the container starts, it executes this command:
 
 For the first 30 seconds of the container's life, there is a /tmp/healthy file. So during the first 30 seconds, the command cat /tmp/healthy returns a success code. After 30 seconds, cat /tmp/healthy returns a failure code.
 
+![image](https://github.com/daus89/cloud-resume-challenge/assets/129677949/6d3e2ce9-bef4-4855-86bc-7bda115738eb)
+
 
 
 
