@@ -385,6 +385,43 @@ kubectl get pods --watch
 
 As you can see in window 1, the Apache Bench is running and the same same time in window 2, the pod is creating while in window 3 the deployment is increasing in replicas count.
 
+# Step 5
+# Implement Liveness and Readiness Probes
+
+Task: Ensure the web application is restarted if it becomes unresponsive and doesn’t receive traffic until ready.
+Define Probes: Add liveness and readiness probes to website-deployment.yaml, targeting an endpoint in your application that confirms its operational status.
+Apply Changes: Update your deployment with the new configuration.
+Test Probes: Simulate failure scenarios (e.g., manually stopping the application) and observe Kubernetes’ response.
+Outcome: Kubernetes automatically restarts unresponsive pods and delays traffic to newly started pods until they’re ready, enhancing the application’s reliability and availability.
+
+Liveliness: The kubelet uses liveness probes to know when to restart a container.
+Readiness: The kubelet uses readiness probes to know when a container is ready to start accepting traffic.
+
+1. To demonstrate the liveliness probe, add these into ecommerce-deployment.yaml file, under spec:
+```
+args:
+    - /bin/sh
+    - -c
+    - touch /tmp/healthy; sleep 30; rm -f /tmp/healthy; sleep 600
+    livenessProbe:
+      exec:
+        command:
+        - cat
+        - /tmp/healthy
+      initialDelaySeconds: 5
+      periodSeconds: 5
+```
+
+In the configuration file, you can see that the Pod has a single Container. The periodSeconds field specifies that the kubelet should perform a liveness probe every 5 seconds. The initialDelaySeconds field tells the kubelet that it should wait 5 seconds before performing the first probe. To perform a probe, the kubelet executes the command cat /tmp/healthy in the target container. If the command succeeds, it returns 0, and the kubelet considers the container to be alive and healthy. If the command returns a non-zero value, the kubelet kills the container and restarts it.
+
+When the container starts, it executes this command:
+
+/bin/sh -c "touch /tmp/healthy; sleep 30; rm -f /tmp/healthy; sleep 600"
+
+For the first 30 seconds of the container's life, there is a /tmp/healthy file. So during the first 30 seconds, the command cat /tmp/healthy returns a success code. After 30 seconds, cat /tmp/healthy returns a failure code.
+
+
+
 
 
 ## Challenges
